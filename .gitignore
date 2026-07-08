@@ -1,0 +1,30 @@
+# Ignore Mac system files
+.DS_Store
+._.DS_Store
+
+# Ignore all nnUNet data and results
+nnUNet_raw/
+nnUNet_preprocessed/
+nnUNet_results/
+nnUnet_train/
+
+# Ignore massive image and segmentation datasets
+microglia_2um_nissl_aligned_images/
+microglia_2um_nissl_aligned_images_enhanced/
+microglia_2um_nissl_aligned_segmentations/
+microglia_2um_nissl_aligned_segmentations_postprocessed/
+microglia_2um_nissl_aligned_low_high_unet_reconstructed_segmentations/
+microglia_highres_0p25um_nissl_aligned_images/
+microglia_highres_0p25um_nissl_aligned_segmentations/
+microglia_highres_0p25um_nissl_aligned_segmentations_noadap/
+microglia_highres_2um_nissl_aligned_images/
+microglia_highres_2um_nissl_aligned_images_contrast_inverse/
+microglia_highres_2um_nissl_aligned_segmentations/
+microglia_highres_2um_nissl_aligned_segmentations_noadap/
+microglia_200um_nissl_aligned_segmentations/
+old_highres_segs/
+slice_100_110_analysis/
+MRI/
+histo_volumes/
+surfaces/
+scripts/*[yY][oO][lL][oO]*
