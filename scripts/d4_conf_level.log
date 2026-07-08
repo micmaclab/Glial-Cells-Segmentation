@@ -1,0 +1,4 @@
+Loading python/gpu/3.10.6-cuda12.9
+  Loading requirement: cuda/12.9
+/cm/local/apps/slurm/var/spoold/slurmd.gn-0002/job25012392/slurm_script: line 13: 3260276 Killed                  python visualize_confidence.py
+[2026-06-30T15:49:05.404] error: Detected 1 oom_kill event in StepId=25012392.batch. Some of the step tasks have been OOM Killed.

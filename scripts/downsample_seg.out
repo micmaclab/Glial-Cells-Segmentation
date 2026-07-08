@@ -1,0 +1,21 @@
+/gpfs/data/ravenlab/micmac/scripts/downsample_segmentations.py:15: UserWarning: Input line 171 contained no data and will not be counted towards `max_rows=50000`.  This differs from the behaviour in NumPy <=1.22 which counted lines rather than rows.  If desired, the previous behaviour can be achieved by using `itertools.islice`.
+Please see the 1.23 release notes for an example on how to do this.  If you wish to ignore this warning, use `warnings.filterwarnings`.  This warning is expected to be removed in the future and is given only once per `loadtxt` call.
+  filenames = np.loadtxt(f'{in_dir}/scripts/microglia_filenames.txt',dtype=str)
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169

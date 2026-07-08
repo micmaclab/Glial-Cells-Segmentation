@@ -1,0 +1,52 @@
+Loading python/gpu/3.10.6-cuda12.9
+  Loading requirement: cuda/12.9
+
+############################
+INFO: You are using the old nnU-Net default plans. We have updated our recommendations. Please consider using those instead! Read more here: https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/resenc_presets.md
+############################
+
+Using device: cuda:0
+
+#######################################################################
+Please cite the following paper when using nnU-Net:
+Isensee, F., Jaeger, P. F., Kohl, S. A., Petersen, J., & Maier-Hein, K. H. (2021). nnU-Net: a self-configuring method for deep learning-based biomedical image segmentation. Nature methods, 18(2), 203-211.
+#######################################################################
+
+2026-06-23 12:53:51.574712: do_dummy_2d_data_aug: False
+2026-06-23 12:53:51.576158: Using splits from existing split file: /gpfs/data/ravenlab/micmac/nnUNet_preprocessed/Dataset002_BinaryTask/splits_final.json
+2026-06-23 12:53:51.577227: The split file contains 5 splits.
+2026-06-23 12:53:51.577332: Desired fold for training: 0
+2026-06-23 12:53:51.577419: This split has 12 training and 3 validation cases.
+using pin_memory on device 0
+using pin_memory on device 0
+
+This is the configuration used by this training:
+Configuration name: 2d
+ {'data_identifier': 'nnUNetPlans_2d', 'preprocessor_name': 'DefaultPreprocessor', 'batch_size': 2, 'patch_size': [1024, 1280], 'median_image_size_in_voxels': [2080.0, 2125.0], 'spacing': [1.0, 1.0], 'normalization_schemes': ['ZScoreNormalization'], 'use_mask_for_norm': [False], 'resampling_fn_data': 'resample_data_or_seg_to_shape', 'resampling_fn_seg': 'resample_data_or_seg_to_shape', 'resampling_fn_data_kwargs': {'is_seg': False, 'order': 3, 'order_z': 0, 'force_separate_z': None}, 'resampling_fn_seg_kwargs': {'is_seg': True, 'order': 1, 'order_z': 0, 'force_separate_z': None}, 'resampling_fn_probabilities': 'resample_data_or_seg_to_shape', 'resampling_fn_probabilities_kwargs': {'is_seg': False, 'order': 1, 'order_z': 0, 'force_separate_z': None}, 'architecture': {'network_class_name': 'dynamic_network_architectures.architectures.unet.PlainConvUNet', 'arch_kwargs': {'n_stages': 9, 'features_per_stage': [32, 64, 128, 256, 512, 512, 512, 512, 512], 'conv_op': 'torch.nn.modules.conv.Conv2d', 'kernel_sizes': [[3, 3], [3, 3], [3, 3], [3, 3], [3, 3], [3, 3], [3, 3], [3, 3], [3, 3]], 'strides': [[1, 1], [2, 2], [2, 2], [2, 2], [2, 2], [2, 2], [2, 2], [2, 2], [2, 2]], 'n_conv_per_stage': [2, 2, 2, 2, 2, 2, 2, 2, 2], 'n_conv_per_stage_decoder': [2, 2, 2, 2, 2, 2, 2, 2], 'conv_bias': True, 'norm_op': 'torch.nn.modules.instancenorm.InstanceNorm2d', 'norm_op_kwargs': {'eps': 1e-05, 'affine': True}, 'dropout_op': None, 'dropout_op_kwargs': None, 'nonlin': 'torch.nn.LeakyReLU', 'nonlin_kwargs': {'inplace': True}}, '_kw_requires_import': ['conv_op', 'norm_op', 'dropout_op', 'nonlin']}, 'batch_dice': True} 
+
+These are the global plan.json settings:
+ {'dataset_name': 'Dataset002_BinaryTask', 'plans_name': 'nnUNetPlans', 'original_median_spacing_after_transp': [999.0, 1.0, 1.0], 'original_median_shape_after_transp': [1, 2080, 2125], 'image_reader_writer': 'NaturalImage2DIO', 'transpose_forward': [0, 1, 2], 'transpose_backward': [0, 1, 2], 'experiment_planner_used': 'ExperimentPlanner', 'label_manager': 'LabelManager', 'foreground_intensity_properties_per_channel': {'0': {'max': 250.0, 'mean': 109.4693603515625, 'median': 108.0, 'min': 5.0, 'percentile_00_5': 30.0, 'percentile_99_5': 199.0, 'std': 36.45087814331055}}} 
+
+2026-06-23 12:53:59.433294: Unable to plot network architecture:
+2026-06-23 12:53:59.433469: No module named 'hiddenlayer'
+2026-06-23 12:53:59.620671: 
+2026-06-23 12:53:59.634062: Epoch 0
+2026-06-23 12:53:59.634452: Current learning rate: 0.01
+2026-06-23 12:56:04.971744: train_loss -0.0642
+2026-06-23 12:56:04.972598: val_loss -0.2007
+2026-06-23 12:56:04.972780: Pseudo dice [np.float32(0.7066)]
+2026-06-23 12:56:04.973068: Epoch time: 125.35 s
+2026-06-23 12:56:04.973216: Yayy! New best EMA pseudo Dice: 0.70660001039505
+2026-06-23 12:56:08.167343: Training done.
+2026-06-23 12:56:08.492346: Using splits from existing split file: /gpfs/data/ravenlab/micmac/nnUNet_preprocessed/Dataset002_BinaryTask/splits_final.json
+2026-06-23 12:56:08.494223: The split file contains 5 splits.
+2026-06-23 12:56:08.494354: Desired fold for training: 0
+2026-06-23 12:56:08.497654: This split has 12 training and 3 validation cases.
+2026-06-23 12:56:08.498713: predicting 41759_11right
+2026-06-23 12:56:08.519958: 41759_11right, shape torch.Size([1, 1, 1055, 1543]), rank 0
+2026-06-23 12:56:14.169096: predicting 41759_47left
+2026-06-23 12:56:14.209258: 41759_47left, shape torch.Size([1, 1, 2016, 2201]), rank 0
+2026-06-23 12:56:15.282288: predicting 41759_61_claus
+2026-06-23 12:56:15.310268: 41759_61_claus, shape torch.Size([1, 1, 2077, 2024]), rank 0
+2026-06-23 12:56:41.987124: Validation complete
+2026-06-23 12:56:41.987356: Mean Validation Dice:  0.6897642107022519

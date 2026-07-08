@@ -1,0 +1,27 @@
+Loading python/gpu/3.10.6-cuda12.9
+  Loading requirement: cuda/12.9
+Launching parallel training for 2D config, Fold 2 using 250-epoch trainer preset...
+
+############################
+INFO: You are using the old nnU-Net default plans. We have updated our recommendations. Please consider using those instead! Read more here: https://github.com/MIC-DKFZ/nnUNet/blob/master/documentation/resenc_presets.md
+############################
+
+Using device: cuda:0
+
+#######################################################################
+Please cite the following paper when using nnU-Net:
+Isensee, F., Jaeger, P. F., Kohl, S. A., Petersen, J., & Maier-Hein, K. H. (2021). nnU-Net: a self-configuring method for deep learning-based biomedical image segmentation. Nature methods, 18(2), 203-211.
+#######################################################################
+
+2026-06-17 18:34:36.995707: Using splits from existing split file: /gpfs/data/ravenlab/micmac/nnUNet_preprocessed/Dataset002_BinaryTask/splits_final.json
+2026-06-17 18:34:36.996028: The split file contains 5 splits.
+2026-06-17 18:34:36.996137: Desired fold for training: 2
+2026-06-17 18:34:36.996228: This split has 12 training and 3 validation cases.
+2026-06-17 18:34:36.996381: predicting 41759_51
+2026-06-17 18:34:37.164208: 41759_51, shape torch.Size([1, 1, 2176, 2201]), rank 0
+2026-06-17 18:34:45.148726: predicting 41759_62_claus
+2026-06-17 18:34:45.347094: 41759_62_claus, shape torch.Size([1, 1, 2240, 2251]), rank 0
+2026-06-17 18:34:46.759021: predicting 41759_64_claus
+2026-06-17 18:34:46.947075: 41759_64_claus, shape torch.Size([1, 1, 2112, 2100]), rank 0
+2026-06-17 18:35:12.564276: Validation complete
+2026-06-17 18:35:12.565129: Mean Validation Dice:  0.5750047840294462
