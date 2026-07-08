@@ -28,3 +28,4 @@ MRI/
 histo_volumes/
 surfaces/
 scripts/*[yY][oO][lL][oO]*
+**/._*
