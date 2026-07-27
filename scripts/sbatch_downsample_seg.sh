@@ -8,4 +8,5 @@
 #SBATCH --mem=128G
 #SBATCH --output=downsample_seg.out
 
-python downsample_segmentations.py
+#python downsample_segmentations.py
+python downsample_segmentations_full_images.py

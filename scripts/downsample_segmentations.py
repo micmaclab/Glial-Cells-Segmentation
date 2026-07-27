@@ -11,6 +11,12 @@ from tifffile import TiffWriter
 #MINC already removed colour channels.
 
 in_dir = '/gpfs/data/ravenlab/micmac'
+out_tag = '007'
+
+recon_out_dir = f'{in_dir}/microglia_2um_nissl_aligned_low_high_unet_reconstructed_segmentations_{out_tag}'
+downsampled_out_dir = f'{in_dir}/microglia_200um_nissl_aligned_segmentations/temp_slices_resampled_nii_segmentations_{out_tag}'
+os.makedirs(recon_out_dir, exist_ok=True)
+os.makedirs(downsampled_out_dir, exist_ok=True)
 
 filenames = np.loadtxt(f'{in_dir}/scripts/microglia_filenames.txt',dtype=str)
 
@@ -22,14 +28,14 @@ arr_num = np.linspace(170,1,170).astype(int) # histo files need to be put into a
 
 for aa in range(len(filenames)):
 
-    if os.path.isfile(f'{in_dir}/microglia_200um_nissl_aligned_segmentations/temp_slices_resampled_nii_segmentations/41759_G_{arr_num[aa]:03d}.nii.gz'):
+    if not os.path.isfile(f'{downsampled_out_dir}/41759_G_{arr_num[aa]:03d}.nii.gz'):
         
-        seg_down = np.squeeze(nib.load(f'{in_dir}/microglia_200um_nissl_aligned_segmentations/temp_slices_resampled_nii_segmentations/41759_G_{arr_num[aa]:03d}.nii.gz').get_fdata()) # start with slice 170
+        #seg_down = np.squeeze(nib.load(f'{in_dir}/microglia_200um_nissl_aligned_segmentations/temp_slices_resampled_nii_segmentations/41759_G_{arr_num[aa]:03d}.nii.gz').get_fdata()) # start with slice 170
 
-        if aa == 0:
-            img_hold = np.empty((seg_down.shape[0],191,seg_down.shape[1]))
+        #if aa == 0:
+            #img_hold = np.empty((seg_down.shape[0],191,seg_down.shape[1]))
 
-    else:
+    #else:
 
         print(aa)
         #img = nib.load(f'{in_dir}/microglia_2um_nissl_aligned_images/{filenames[aa]}')
@@ -47,7 +53,7 @@ for aa in range(len(filenames)):
         for xx in range(3): # Reconstruct full slices from patches
             for yy in range(4):
                 if np.logical_and(xx==0,yy==0):
-                    seg_image_hold = np.squeeze(tifffile.imread(f'{in_dir}/nnUNet_results/Dataset004_BinaryTask/prediction_on_test/41759_G_{arr_num[aa]:03d}_slice_{xx}_{yy}.tiff')) # start with slice 170
+                    seg_image_hold = np.squeeze(tifffile.imread(f'{in_dir}/nnUNet_results/Dataset007_BinaryTask/prediction_on_test/41759_G_{arr_num[aa]:03d}_slice_{xx}_{yy}.tiff')) # start with slice 170
                     seg_image[0:boxsize[0],0:boxsize[1]] = seg_image_hold
                 #elif np.logical_and(xx==2,yy!=2):
                 #    startx = int(xx*boxsize[0])
@@ -65,12 +71,12 @@ for aa in range(len(filenames)):
                     starty = int(yy*boxsize[1])
                     endy = int((yy+1) * boxsize[1])  
 
-                    seg_image_hold = np.squeeze(tifffile.imread(f'{in_dir}/nnUNet_results/Dataset004_BinaryTask/prediction_on_test/41759_G_{arr_num[aa]:03d}_slice_{xx}_{yy}.tiff')) # start with slice 170
+                    seg_image_hold = np.squeeze(tifffile.imread(f'{in_dir}/nnUNet_results/Dataset007_BinaryTask/prediction_on_test/41759_G_{arr_num[aa]:03d}_slice_{xx}_{yy}.tiff')) # start with slice 170
                     seg_image[startx:endx,starty:endy] = seg_image_hold
 
         #seg_image = np.squeeze(nib.load(f'{in_dir}/microglia_2um_nissl_aligned_segmentations/41759_G_{arr_num[aa]:03d}.nii.gz').get_fdata()) # start with slice 170
 
-        with TiffWriter(f'{in_dir}/microglia_2um_nissl_aligned_low_high_unet_reconstructed_segmentations/41759_G_{arr_num[aa]:03d}.tiff', bigtiff=True) as tif:
+        with TiffWriter(f'{recon_out_dir}/41759_G_{arr_num[aa]:03d}.tiff', bigtiff=True) as tif:
             tif.write(seg_image.astype(bool))
 
         seg_image = ndimage.gaussian_filter(seg_image, sigma=25) # smooth
@@ -87,10 +93,12 @@ for aa in range(len(filenames)):
 
         img_save = nib.Nifti1Image(seg_down, affine)
         #nib.save(img_save, f'{in_dir}/downsampled_image_test/temp_slices_resampled_nii/41759_G_{arr_num[aa]:03d}.nii.gz')
-        nib.save(img_save, f'{in_dir}/microglia_200um_nissl_aligned_segmentations/temp_slices_resampled_nii_segmentations/41759_G_{arr_num[aa]:03d}.nii.gz')
+        nib.save(img_save, f'{downsampled_out_dir}/41759_G_{arr_num[aa]:03d}.nii.gz')
 
     img_hold[:,aa+10,:] = seg_down
 
 
 #img_save = nib.Nifti1Image(img_hold, ref_affine, ref_hdr)
 #nib.save(img_save, f'{in_dir}/microglia_200um_nissl_aligned_segmentations/microglia_200um_image_smoothed_downsampled_segmentation.nii.gz')
+
+#downsample_nii_rearrange.ipynb to make the reconstructed image
