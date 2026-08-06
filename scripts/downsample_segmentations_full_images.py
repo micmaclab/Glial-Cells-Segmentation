@@ -11,7 +11,7 @@ from tifffile import TiffWriter
 #MINC already removed colour channels.
 
 in_dir = '/gpfs/data/ravenlab/micmac'
-out_tag = '007'
+out_tag = '011'
 
 downsampled_out_dir = f'{in_dir}/microglia_200um_nissl_aligned_segmentations/temp_slices_resampled_nii_segmentations_full_images_{out_tag}'
 os.makedirs(downsampled_out_dir, exist_ok=True)
@@ -41,7 +41,7 @@ for aa in range(len(filenames)):
         #hdr = img.header
         affine = nib.load(f'{in_dir}/microglia_2um_nissl_aligned_segmentations/41759_G_{arr_num[aa]:03d}.nii.gz').affine # start with slice 170
 
-        seg_image = np.squeeze(tifffile.imread(f'{in_dir}/nnUNet_results/Dataset007_BinaryTask/prediction_on_test/41759_G_{arr_num[aa]:03d}.tiff')) # start with slice 170
+        seg_image = np.squeeze(tifffile.imread(f'{in_dir}/nnUNet_results/Dataset011_BinaryTask/prediction_on_test/41759_G_{arr_num[aa]:03d}.tiff')) # start with slice 170
 
         seg_image = seg_image.astype(np.float64)
 
@@ -62,6 +62,25 @@ for aa in range(len(filenames)):
         nib.save(img_save, f'{downsampled_out_dir}/41759_G_{arr_num[aa]:03d}.nii.gz')
 
     #img_hold[:,aa+10,:] = seg_down
+
+
+for aa in range(len(arr_num)):
+
+    #seg_down = np.squeeze(nib.load(f'{in_dir}/microglia_200um_nissl_aligned_segmentations/newer/temp_slices_resampled_nii_segmentations/41759_G_{arr_num[aa]:03d}.nii.gz').get_fdata()) # start with slice 170
+    #seg_down = np.squeeze(nib.load(f'{in_dir}/microglia_200um_nissl_aligned_segmentations/temp_slices_resampled_nii_segmentations_007/41759_G_{arr_num[aa]:03d}.nii.gz').get_fdata()) # start with slice 170
+    seg_down = np.squeeze(nib.load(f'{in_dir}/microglia_200um_nissl_aligned_segmentations/temp_slices_resampled_nii_segmentations_full_images_011/41759_G_{arr_num[aa]:03d}.nii.gz').get_fdata()) # start with slice 170
+
+    if aa == 0:
+        img_hold = np.empty((seg_down.shape[0],191,seg_down.shape[1]))
+
+    img_hold[:,aa+10,:] = seg_down
+
+# SAVE NO 3D SMOOTHING
+img_save = nib.Nifti1Image(img_hold, ref_affine, ref_hdr)
+nib.save(img_save, f'{in_dir}/microglia_200um_nissl_aligned_segmentations/microglia_200um_image_smoothed_downsampled_segmentation_full_images_model-011.nii.gz')
+
+
+
 
 
 #img_save = nib.Nifti1Image(img_hold, ref_affine, ref_hdr)

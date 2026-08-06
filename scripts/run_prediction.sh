@@ -7,7 +7,7 @@
 #SBATCH --mem=128G
 #SBATCH --time=3-00:00:00              # for ensemble
 #SBATCH --job-name=nnunet_prediction
-#SBATCH --output=model007/prediction_output.log
+#SBATCH --output=model011/prediction_output.log
 #SBATCH --exclude=gn-0010,gn-0012,gn-0013,gn-0014,gn-0016,gn-0019,gn-0020
 # 1. Load your Python and Library configuration
 module load python/gpu/3.10.6-cuda12.9
@@ -23,13 +23,13 @@ export LD_LIBRARY_PATH=$HOME/.local/lib/python3.10/site-packages/nvidia/cudnn/li
 export nnUNet_compile=F
 
 # 5. Run prediction on unseen images
-nnUNetv2_predict -i /gpfs/data/ravenlab/micmac/nnUNet_raw/Dataset007_BinaryTask/imagesTs \
-                 -o /gpfs/data/ravenlab/micmac/nnUNet_results/Dataset007_BinaryTask/prediction_on_test \
-                 -d 7 \
+nnUNetv2_predict -i /gpfs/data/ravenlab/micmac/nnUNet_raw/Dataset011_BinaryTask/imagesTs \
+                 -o /gpfs/data/ravenlab/micmac/nnUNet_results/Dataset011_BinaryTask/prediction_on_test \
+                 -d 11 \
                  -f 0 1 2 3 4 \
                  -c 2d \
 		 -npp 1 \
-		 -nps 1 \
+	         -nps 1 \
                  -tr nnUNetTrainer_250epochs \
 		 -chk checkpoint_best.pth \
 		 --save_probabilities
