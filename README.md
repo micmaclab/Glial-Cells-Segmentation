@@ -9,7 +9,7 @@ full pipeline.
 
 ## Background
 
-Microglia are the only immune cells residing in the brain parenchyma — the main
+Microglia are the only immune cells residing in the brain parenchyma - the main
 working tissue of the brain. Once dismissed as mere "support cells," they're now
 recognized as active modulators of neural circuits: their morphology encodes
 functional state, meaning they're dynamic, not static. They survey the tissue,
@@ -17,20 +17,19 @@ prune synapses, respond to injury, and shape brain dynamics in real time, and
 there are countless of them, distributed across space like a matrix. They're
 effectively the cleaning cells of the central nervous system.
 
-That density and complexity is exactly what makes them hard to study
+That density and complexitys makes them hard to study
 computationally. They're small and densely packed, so distinguishing individual
 cells without computational extraction is difficult. Manual tracing is
 infeasible at whole-brain volume. Classical (global) thresholding fails because
-intensity varies substantially across a slide — gray matter vs. white matter
-alone shifts the baseline — and quantifying glial organization more broadly is
+intensity varies substantially across a slide, such as gray matter vs. white matter can shift the baseline, and quantifying glial organization more broadly is
 difficult given how complex and varied their spatial distribution and morphology
 are.
 
 Published ML segmentation models exist for mouse brains (e.g. Stain AI, which
 classifies cell shapes/features in mouse tissue), but not for primate brains, and
 none of the mouse models are publicly available. This project closes that gap:
-a reusable, open-source deep learning pipeline that segments microglia across a
-**whole Macaque brain** — the first to do so at this scale.
+we want to provide a reusable, open-source deep learning pipeline that segments microglia across a
+**whole Macaque brain**, which is the first to do so at this scale.
 
 ---
 
@@ -38,7 +37,7 @@ a reusable, open-source deep learning pipeline that segments microglia across a
 
 **The images and labels this pipeline was built on are not included here and are
 not public.** You'll need your own histology images before any step below will
-run — this repo only has the scripts, not the data.
+run (this repo only has the scripts, not the data).
 
 For reference, here's what the original data looked like, so you have a gauge of
 what "similar enough to use this pipeline as-is" means. It's **two distinct
@@ -47,10 +46,9 @@ sets**, not one:
   thickness) spanning a whole healthy Macaque brain, scanned at 2 µm/pixel.
   Whole-slide, single-channel (grayscale) histology sections, roughly
   28,000 × 34,000 px per slide. We call this "low-res" only relative to Set 2
-  below — 2 µm/pixel is itself a high-resolution scan.
+  below - 2 µm/pixel is itself a high-resolution scan.
 - **Set 2 (fine morphology):** 25 "high-res" 0.25 µm/pixel slices of particular
-  glia clusters/morphologies — not whole-brain coverage, and not a higher-res
-  version of Set 1's slides. Used specifically to teach the model finer
+  glia clusters/morphologies. Used specifically to teach the model finer
   microglial process/shape detail during training (see step 6).
 - Stored in TIFF (`.tiff`) format, one file per section.
 - Target structure: microglia, segmented as a binary mask (background vs.
@@ -80,18 +78,18 @@ conda activate microglia_seg
 
 **B. nnU-Net training/inference/preprocessing** (GPU, torch, nnunetv2). This
 project was built on a cluster with a shared GPU Python module (`module load
-python/gpu/3.10.6-cuda12.9`) as the base — **that module name is specific to this
-cluster and won't exist elsewhere.** If you're on a different machine:
+python/gpu/3.10.6-cuda12.9`) as the base - **that module name is specific to this
+cluster.** If you're on a different machine:
 - Check what your own cluster/system offers first: `module avail python` /
   `module spider cuda` (naming varies a lot between institutions), or ask your
   cluster's docs/admins what the equivalent GPU-enabled Python module is called.
 - If there's no such module (or you're not on a shared cluster at all), skip
-  `module load` entirely and just build your own GPU-capable environment instead —
+  `module load` entirely and just build your own GPU-capable environment instead -
   a conda env or venv with a CUDA build of torch matching your GPU driver (see
   [pytorch.org's install matrix](https://pytorch.org/get-started/locally/) to pick
   the right command for your CUDA version), then install nnU-Net into that same
   env. Everything below (`nnUNet_compile`, the console scripts, `LD_LIBRARY_PATH`)
-  works the same either way — it's only the "how do I get a working GPU Python"
+  works the same either way - it's only the "how do I get a working GPU Python"
   step that's cluster-specific.
 
 Whichever base you end up with:
@@ -228,15 +226,14 @@ sbatch --array=0-4 run_full_train.sh
 script before submitting — it's currently set up for a later dataset). Each fold's
 log lands in `model001/nnunet_fold_<N>.log`.
 
-> **What to expect:** finding a good model here usually takes a few tries — we
+> **What to expect:** finding a good model here usually takes a few tries - we
 > trained around 6 dataset/config variants before landing on the best one. Our
 > best first-round model used 250 epochs, 5-fold cross-validation, on 20 training
-> images made up of **8 Set-1 (2 µm) and 12 Set-2 (0.25 µm)** tiles — the
+> images made up of **8 Set-1 (2 µm) and 12 Set-2 (0.25 µm)** tiles - the
 > high-resolution Set-2 examples contributed disproportionately to teaching the
 > model finer microglial process/shape detail and boosted its confidence on that
-> structure. This first-round model scored a Mean Dice Coefficient of **~75%** —
-> solid, given the training labels themselves came from imperfect intensity
-> thresholding (steps 1–2), not hand-drawn ground truth.
+> structure. This first-round model scored a Mean Dice Coefficient of **~75%** - which is a good start, given the training labels themselves came from imperfect intensity
+> thresholding (steps 1-2), not hand-drawn ground truth.
 
 ---
 
@@ -264,7 +261,7 @@ nnUNetv2_apply_postprocessing -i .../prediction_on_test -o .../prediction_on_tes
   -pp_pkl_file .../postprocessing.pkl -plans_json .../plans.json -np 4
 ```
 This is nnU-Net's own connected-component postprocessing (distinct from the
-morphological cleanup in step 1) — worth checking whether it changes anything;
+morphological cleanup in step 1). It is worth checking whether it changes anything;
 if pre/post output match, the model is likely near its ceiling for that config.
 
 ---
@@ -278,7 +275,7 @@ For each predicted tile's saved probability map (`.npz`), these compute per-slic
 metrics: committed confidence (mean probability where foreground was predicted),
 fraction of pixels in the "hesitant" 0.2–0.8 band, and foreground pixel count.
 Confidence ≥ 0.8 (vs. the nominal 0.5 decision threshold) was used to find the
-**best, most reliable, non-tiling-affected predictions** — not to flag bad ones.
+**best, most reliable, non-tiling-affected predictions**.
 These high-confidence slices are what step 10 draws from.
 
 Run via:
@@ -291,7 +288,7 @@ sbatch run_conf_level_d4.sh        # visualize_confidence.py
 
 ## 10. Fine-tune on inference slices (incremental learning)
 
-**Why:** Qualitative review of step 7's predictions exposes a tiling artifact —
+**Why:** Qualitative review of step 7's predictions exposes a tiling artifact -
 the model learned local background brightness as a proxy for cell density, so
 darker tiles get over-segmented and lighter tiles under-segmented at the
 boundaries of the 10000×10000 training/inference tiles. Rather than re-labeling
@@ -301,8 +298,8 @@ in step 9 (around 15 worked for us), lightly hand-clean them, and feed them back
 in as new, high-quality training examples.
 
 Treat this small set as a new training set and go through
-**steps 2–9 again**, this time landing in a new dataset — e.g.
-`nnUNet_raw/Dataset002_BinaryTask/` — retiling, writing a fresh `dataset.json`,
+**steps 2–9 again**, this time landing in a new dataset (e.g.
+`nnUNet_raw/Dataset002_BinaryTask/`) retiling, writing a fresh `dataset.json`,
 plan/preprocess, training 5 folds, predicting, and rerunning the confidence QC to
 confirm the tiling artifact is gone. This incremental fine-tune is what eliminated
 it for us: Mean Dice jumped from ~75% to **~96%**, and previously over/under-labeled
@@ -313,13 +310,12 @@ regions became much more uniform after retraining on these examples.
 ## 11. Predict on whole slides, then downsample to 200 µm
 
 Earlier predictions (step 7) ran on 10000×10000 tiles, which were then stitched
-back together with a hard, non-overlapping paste and no blending — each tile was
+back together with a hard, non-overlapping paste and no blending. Each tile was
 also normalized on its own statistics during inference, so the seams between
-tiles show up as a faint checkerboard in the reconstructed mask. **Avoid this
-entirely by predicting on each whole slide directly, instead of pre-tiling for
+tiles show up as a faint checkerboard in the reconstructed mask. **Avoid this by predicting on each whole slide directly, instead of pre-tiling for
 inference.** nnU-Net already runs sliding-window inference internally (patch size
 ~1024×1536 for this task) and blends overlapping patches with a Gaussian-weighted
-average — that blending only has visibility within a single input image, so
+average, which only has visibility within a single input image, so
 feeding it the whole, untiled slide lets its own stitching handle the entire
 slide rather than only the inside of each externally-cut chunk:
 
@@ -339,11 +335,11 @@ single tile.
 downsamples each predicted slide to 200 µm resolution (Gaussian-smooth `sigma=25`,
 then `cv2.resize` by `2/200`), saving one NIfTI per slice. Since predictions are
 now already at full resolution in a single file per slide, the tile-stitching loop
-in that script (reassembling a 3×4 tile grid) is no longer needed — only the
+in that script (reassembling a 3×4 tile grid) is no longer needed - only the
 smoothing/downsampling steps still apply.
 
 > If your GPU can't fit a whole slide in memory, you'll need to fall back to
-> tiling for inference — in that case, use overlapping tiles and blend the
+> tiling for inference. In that case, use overlapping tiles and blend the
 > overlap region (linear/cosine ramp, or a Gaussian weight like nnU-Net's own
 > importance map) when stitching, rather than the hard paste used previously.
 
@@ -381,8 +377,7 @@ Downsampled, artifact-corrected microglia density maps reconstructed into a full
 
 - **Instance-level segmentation, not just binary masks.** The current target is
   background-vs-microglia. Since morphology encodes functional state (see
-  Background), a natural next step is per-cell instance segmentation — soma
-  size, process length/branching — to actually quantify functional state rather
+  Background), a natural next step is per-cell instance segmentation to actually quantify functional state rather
   than just density.
 - **Reduce the manual-correction burden.** Steps 2 and 10 both depend on hand
   correction in napari. Active-learning-style loops (having the model itself
@@ -404,3 +399,44 @@ Downsampled, artifact-corrected microglia density maps reconstructed into a full
 - **Public release.** Packaging the trained weights, environment, and pipeline
   (e.g. a container image) for other labs to run directly, rather than needing
   to reproduce training from scratch via this tutorial.
+
+---
+
+## Citation
+
+This project doesn't have a formal publication yet. If you use this pipeline,
+please contact **Bradley Karat** (Bradley.Karat@nyulangone.org) or
+**Erika Raven** (Erika.Raven@nyulangone.org) for the citation to use.
+
+This pipeline is built directly on nnU-Net — please also cite:
+> Isensee, F., Jaeger, P. F., Kohl, S. A., Petersen, J., & Maier-Hein, K. H.
+> (2021). nnU-Net: a self-configuring method for deep learning-based biomedical
+> image segmentation. *Nature Methods*, 18(2), 203–211.
+
+### Background reading
+
+Microglia biology papers referenced in this README:
+- Nimmerjahn, A., Kirchhoff, F., & Helmchen, F. (2005). Resting microglial cells
+  are highly dynamic surveillants of brain parenchyma in vivo. *Science*,
+  308(5726), 1314–1318.
+- Paolicelli, R. C., Bolasco, G., Pagani, F., Maggi, L., Scianni, M., Panzanelli,
+  P., et al. (2011). Synaptic pruning by microglia is necessary for normal brain
+  development. *Science*, 333(6048), 1456–1458.
+- Lawson, L. J., Perry, V. H., Dri, P., & Gordon, S. (1990). Heterogeneity in the
+  distribution and morphology of microglia in the normal adult mouse brain.
+  *Neuroscience*, 39(1), 151–170.
+- Norris, G. T., & Kipnis, J. (2018). Immune cells and CNS physiology: Microglia
+  and beyond. *Journal of Experimental Medicine*, 216(1), 60–70.
+  https://doi.org/10.1084/jem.20180199
+- Sousa, C., Biber, K., & Michelucci, A. (2017). Cellular and molecular
+  characterization of microglia: A unique immune cell population. *Frontiers in
+  Immunology*, 8. https://doi.org/10.3389/fimmu.2017.00198
+- Dadwal, S., & Heneka, M. T. (2023). Microglia heterogeneity in health and
+  disease. *FEBS Open Bio*, 14(2), 217–229.
+  https://doi.org/10.1002/2211-5463.13735
+- Hsu, C.-H., Hsu, Y.-Y., Chang, B.-M., Raffensperger, K., Kadden, M., Ton, H. T.,
+  Ette, E.-A., Lin, S., Brooks, J., Burke, M. W., Lee, Y.-J., Wang, P. C.,
+  Shoykhet, M., & Tu, T.-W. (2025). StainAI: quantitative mapping of stained
+  microglia and insights into brain-wide neuroinflammation and therapeutic
+  effects in cardiac arrest. *Communications Biology*, 8, 462.
+  https://doi.org/10.1038/s42003-025-07926-y
